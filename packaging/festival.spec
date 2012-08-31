@@ -5,11 +5,11 @@ Group:      System/Libraries
 License:    MIT and GPL+ and TCL
 Url:        http://www.cstr.ed.ac.uk/projects/festival/
 Summary:    A free speech synthesis and text-to-speech system
-Source0:    http://www.cstr.ed.ac.uk/downloads/festival/2.1/festival-%{version}-release.tar.gz
-Source1:    http://www.cstr.ed.ac.uk/downloads/festival/2.1/speech_tools-%{version}-release.tar.gz
-Source2:    http://www.cstr.ed.ac.uk/downloads/festival/2.1/festlex_CMU.tar.gz
-Source3:    http://www.cstr.ed.ac.uk/downloads/festival/2.1/festvox_kallpc16k.tar.gz
-Source4:    http://www.cstr.ed.ac.uk/downloads/festival/2.1/festlex_POSLEX.tar.gz
+Source0:    festival-%{version}.tar.gz
+Source1:    speech_tools-%{version}-release.tar.gz
+Source2:    festlex_CMU.tar.gz
+Source3:    festvox_kallpc16k.tar.gz
+Source4:    festlex_POSLEX.tar.gz
 Patch0:     festival-1.95-examples.patch
 Patch1:     festival-text2wave-manpage.patch
 Patch2:     festival-1.95-libdir.patch
@@ -41,7 +41,7 @@ Requires:       %{name} = %{version}
 Files needed for developing software that uses Festival.
 
 %prep
-%setup -q -b 1 -b 2 -b 3 -b 4 -q -n festival
+%setup -q -b 1 -b 2 -b 3 -b 4  
 %patch0 -p1
 %patch1 -p1
 %patch2
