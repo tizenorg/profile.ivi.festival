@@ -1,0 +1,14 @@
+diff -up festival/lib/init.scm.use-pacat festival/lib/init.scm
+--- festival/lib/init.scm.use-pacat	2008-10-27 21:35:08.000000000 -0400
++++ festival/lib/init.scm	2008-10-27 21:41:08.000000000 -0400
+@@ -140,6 +140,10 @@
+ (require 'token)
+ (require 'tts)
+ 
++;;; Default to using pulseaudio (bug 467531)
++(Parameter.def 'Audio_Command "pacat --channels=1 --rate=$SR $FILE -n Festival --stream-name=Speech")
++(Parameter.set 'Audio_Method 'Audio_Command)
++
+ ;;;
+ ;;;  Local site initialization, if the file exists load it
+ ;;;
