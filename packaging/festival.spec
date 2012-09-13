@@ -41,7 +41,8 @@ Requires:       %{name} = %{version}
 Files needed for developing software that uses Festival.
 
 %prep
-%setup -q -b 1 -b 2 -b 3 -b 4  
+%setup -q -b 1 -b 2 -b 3 -b 4
+mv ../festival/lib/* lib/
 %patch0 -p1
 %patch1 -p1
 %patch2
@@ -69,7 +70,7 @@ cd ../speech_tools
 	        --datadir=%_datadir/festival \
             --sysconfdir=%_sysconfdir
 make CC="gcc -fPIC $RPM_OPT_FLAGS" CXX="g++ $RPM_OPT_FLAGS -fPIC -Wno-non-template-friend -ffriend-injection -fno-strict-aliasing"
-cd ../festival
+cd ../%{name}-%{version}
 make CC="gcc -fPIC $RPM_OPT_FLAGS" CXX="g++ $RPM_OPT_FLAGS -fPIC -Wno-non-template-friend -ffriend-injection -fno-strict-aliasing"
 make doc
 
@@ -77,7 +78,7 @@ make doc
 %make_install
 cd ../speech_tools
 %make_install
-cd ../festival
+cd ../%{name}-%{version}
 # install binarys
 install -D bin/text2wave $RPM_BUILD_ROOT%_bindir/text2wave
 install -m 755 bin/festival* $RPM_BUILD_ROOT%_bindir/
