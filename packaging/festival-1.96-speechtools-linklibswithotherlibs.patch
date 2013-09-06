@@ -1,0 +1,22 @@
+*** speech_tools/config/project.mak.orig	2013-09-06 15:08:32.509199297 +0300
+--- speech_tools/config/project.mak	2013-09-06 15:10:16.120798614 +0300
+***************
+*** 99,106 ****
+  PROJECT_LIBRARY_DIR_eststring = $(TOP)/lib
+  PROJECT_LIBRARY_DIR_estjava = $(TOP)/lib
+  
+! PROJECT_LIBRARY_USES_estbase = eststring
+! 
+  PROJECT_LIBRARY_USES_estjava = estbase eststring
+  
+  PROJECT_LIBRARY_VERSION_estools = $(PROJECT_VERSION).1
+--- 99,107 ----
+  PROJECT_LIBRARY_DIR_eststring = $(TOP)/lib
+  PROJECT_LIBRARY_DIR_estjava = $(TOP)/lib
+  
+! PROJECT_LIBRARY_USES_estbase = eststring m
+! PROJECT_LIBRARY_USES_estools = estbase m ncurses
+! PROJECT_LIBRARY_USES_eststring = m
+  PROJECT_LIBRARY_USES_estjava = estbase eststring
+  
+  PROJECT_LIBRARY_VERSION_estools = $(PROJECT_VERSION).1

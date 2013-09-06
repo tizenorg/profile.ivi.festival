@@ -1,6 +1,6 @@
 Name:       festival
 Version:    2.1
-Release:    1
+Release:    2
 Group:      System/Libraries
 License:    MIT and GPL+ and TCL
 Url:        http://www.cstr.ed.ac.uk/projects/festival/
@@ -23,6 +23,14 @@ Patch101:   speech_tools-undefined-operation.patch
 Patch102:   speech_tools-1.2.95-config.patch
 Patch103:   speech_tools-no-LD_LIBRARY_PATH-extension.patch
 Patch104:   speech_tools-gcc47.patch
+
+Patch200:   festival-1.96-speechtools-shared-build.patch
+Patch201:   festival-1.96-bettersonamehack.patch
+Patch205:   festival-1.96-main-speech_tools-shared-build.patch
+Patch206:   festival-1.96-main-festival-shared-build.patch
+Patch210:   no-shared-data.patch
+Patch211:   festival-1.96-speechtools-linklibswithotherlibs.patch
+
 BuildRequires:  pkgconfig(ncurses)
 
 %description
@@ -57,31 +65,54 @@ cd ../speech_tools
 %patch103 -p1
 %patch104 -p1
 
+%patch200 -p2 -b .shared-build
+%patch201 -p2 -b .bettersoname
+%patch205 -p2 -b .shared
+cd ../festival-2.1
+%patch206 -p1 -b .shared
+cd ../speech_tools
+%patch210 -p1 -b .no-shared-data
+%patch211 -p1 -b .linklibswithotherlibs
+
 %build
 # festival
-./configure --prefix=%_prefix \
+%configure --prefix=%_prefix \
 	    --libdir=%_libdir \
 	    --datadir=%_datadir/festival \
 	    --sysconfdir=%_sysconfdir
+
+cd ..
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/speech_tools/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/festival-2.1/src/lib
+
 # speech tools
-cd ../speech_tools
-./configure --prefix=%_prefix \
+cd speech_tools
+%configure --prefix=%_prefix \
             --libdir=%_libdir \
 	        --datadir=%_datadir/festival \
             --sysconfdir=%_sysconfdir
+
 make CC="gcc -fPIC $RPM_OPT_FLAGS" CXX="g++ $RPM_OPT_FLAGS -fPIC -Wno-non-template-friend -ffriend-injection -fno-strict-aliasing"
 cd ../%{name}-%{version}
 make CC="gcc -fPIC $RPM_OPT_FLAGS" CXX="g++ $RPM_OPT_FLAGS -fPIC -Wno-non-template-friend -ffriend-injection -fno-strict-aliasing"
 make doc
 
+
 %install
-%make_install
+cd ..
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/speech_tools/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/festival-2.1/src/lib
+cd -
+#%make_install
+#make INSTALLED_BIN=$RPM_BUILD_ROOT%{_bindir} make_installed_bin_shared
 cd ../speech_tools
 %make_install
 cd ../%{name}-%{version}
 # install binarys
 install -D bin/text2wave $RPM_BUILD_ROOT%_bindir/text2wave
-install -m 755 bin/festival* $RPM_BUILD_ROOT%_bindir/
+install -m 755 src/main/festival $RPM_BUILD_ROOT%_bindir/
+install -m 755 src/main/festival_client $RPM_BUILD_ROOT%_bindir/
+install -m 755 bin/festival_server* $RPM_BUILD_ROOT%_bindir/
 install -m 755 examples/saytime $RPM_BUILD_ROOT%_bindir/
 # install manpages
 install -D -m 644 doc/festival.1 $RPM_BUILD_ROOT%_mandir/man1/festival.1
@@ -106,7 +137,7 @@ cp lib/*.gram $RPM_BUILD_ROOT/usr/share/festival/
 cp lib/*.el $RPM_BUILD_ROOT/usr/share/festival/
 install -D lib/etc/unknown_Linux/audsp $RPM_BUILD_ROOT/usr/lib/festival/audsp
 # install libs
-install -D src/lib/libFestival.a  $RPM_BUILD_ROOT/%_libdir/libFestival.a
+install -D src/lib/libFestival.so  $RPM_BUILD_ROOT/%_libdir/libFestival.so
 # install includes
 mkdir -p $RPM_BUILD_ROOT%_includedir/
 install -m 644 src/include/*.h $RPM_BUILD_ROOT%_includedir/
@@ -123,8 +154,10 @@ install -m 644 include/ling_class/*h $RPM_BUILD_ROOT%_includedir/ling_class
 install -m 644 include/rxp/*h $RPM_BUILD_ROOT%_includedir/rxp
 install -m 644 include/sigpr/*h $RPM_BUILD_ROOT%_includedir/sigpr
 install -m 644 include/unix/*h $RPM_BUILD_ROOT%_includedir/unix
-# install libs
-install -m 644 lib/lib*.a $RPM_BUILD_ROOT%_libdir
+# make sure we have no static libs, install shared ones
+install -m 644 lib/lib*.so* $RPM_BUILD_ROOT%_libdir
+rm -f $RPM_BUILD_ROOT%_libdir/*.a
+
 # install init script
 # install -m 755 -D %{S:6} $RPM_BUILD_ROOT/etc/init.d/%name
 # install -d $RPM_BUILD_ROOT%_sbindir
@@ -134,6 +167,18 @@ install -m 644 lib/lib*.a $RPM_BUILD_ROOT%_libdir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+ldconfig
+
+%postun
+ldconfig
+
+%post devel
+ldconfig
+
+%postun devel
+ldconfig
 
 %files 
 %defattr(-,root,root)
@@ -146,6 +191,9 @@ rm -rf $RPM_BUILD_ROOT
 %_bindir/festival_server_control
 %_bindir/text2wave
 %_bindir/saytime
+%_libdir/libe*.so.*
+%_libdir/libFestival.so
+
 %_prefix/lib/festival
 %_datadir/festival
 %_mandir/man1/*
@@ -153,4 +201,4 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %_includedir/*
-%_libdir/lib*.a
+%_libdir/libe*.so

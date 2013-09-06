@@ -1,0 +1,19 @@
+*** speech_tools/config/compilers/gcc_defaults.mak.orig	2013-09-06 14:53:28.495520463 +0300
+--- speech_tools/config/compilers/gcc_defaults.mak	2013-09-06 14:54:01.021336402 +0300
+***************
+*** 81,87 ****
+  SHARED_LINKFLAGS = 
+  
+  ifndef GCC_MAKE_SHARED_LIB
+!     MAKE_SHARED_LIB = $(CXX) -shared -fno-shared-data -o XXX -Wl,-soname,YYY
+  else
+      MAKE_SHARED_LIB = $(GCC_MAKE_SHARED_LIB)
+  endif
+--- 81,87 ----
+  SHARED_LINKFLAGS = 
+  
+  ifndef GCC_MAKE_SHARED_LIB
+!     MAKE_SHARED_LIB = $(CXX) -shared -o XXX -Wl,-soname,YYY
+  else
+      MAKE_SHARED_LIB = $(GCC_MAKE_SHARED_LIB)
+  endif

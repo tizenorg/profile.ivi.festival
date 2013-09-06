@@ -1,0 +1,11 @@
+--- festival/config/project.mak.orig	2007-03-16 13:01:40.000000000 -0400
++++ festival/config/project.mak	2007-03-16 13:02:24.000000000 -0400
+@@ -84,6 +84,8 @@
+ PROJECT_LIBRARY_DIR_Festival = $(TOP)/src/lib
+ PROJECT_DEFAULT_LIBRARY = Festival
+ 
++PROJECT_LIBRARY_VERSION_Festival = $(PROJECT_VERSION).0
++
+ # Libraries used from other projects
+ 
+ REQUIRED_LIBRARIES = estools estbase eststring
