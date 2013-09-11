@@ -1,5 +1,6 @@
 * Fri Sep 06 2013 Krisztian Litkey <krisztian.litkey@intel.com> 2.1-2
 - Generate only shared libraries of speech_tools and festival.
+- Patches are original courtesy of Fedora, massaged to apply to our tree.
 
 * Thu Sep 13 2012 Rusty Lynch <rusty.lynch@intel.com> submit/trunk/20120831.221731@269e4ea
 - Fix the spec so it correctly builds 
