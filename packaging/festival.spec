@@ -133,7 +133,7 @@ cp lib/*.scm %{buildroot}%{_datadir}/festival/
 cp lib/*.ngrambin %{buildroot}%{_datadir}/festival/
 cp lib/*.gram %{buildroot}%{_datadir}/festival/
 cp lib/*.el %{buildroot}%{_datadir}/festival/
-install -D lib/etc/unknown_Linux/audsp %{buildroot}%{_prefix}/lib/festival/audsp
+install -D lib/etc/unknown*/audsp %{buildroot}%{_prefix}/lib/festival/audsp
 # install libs
 install -D src/lib/libFestival.so  %{buildroot}/%{_libdir}/libFestival.so
 # install includes
